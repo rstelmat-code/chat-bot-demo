@@ -149,33 +149,82 @@
       <button onclick="sendMessage()">Send</button>
     </div>
   </div>
+<script>
+  function toggleChat() {
+    const chatWindow = document.getElementById("chatWindow");
+    const body = document.getElementById("chatBody");
 
-  <script>
-    function toggleChat() {
-      const win = document.querySelector('.chatbot-window');
-      win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
-    }
+    chatWindow.style.display =
+      chatWindow.style.display === "flex" ? "none" : "flex";
 
-    function sendMessage() {
-      const input = document.querySelector('#chatInput');
-      const body = document.querySelector('.chat-body');
-
-      if (!input.value.trim()) return;
-
-      const msg = document.createElement('div');
-      msg.className = 'chat-message';
-      msg.textContent = "You: " + input.value;
-      body.appendChild(msg);
-      input.value = "";
-
+    if (body.innerHTML.trim() === "") {
+      botTyping();
       setTimeout(() => {
-        const bot = document.createElement('div');
-        bot.className = 'chat-message';
-        bot.textContent = "Bot: Dank u! Dit is een demo-antwoord.";
-        body.appendChild(bot);
+        body.innerHTML += `<div class="bot-message">Bot: Hallo en welkom! Hoe kan ik u helpen?</div>`;
         body.scrollTop = body.scrollHeight;
-      }, 600);
+      }, 800);
     }
-  </script>
+  }
+
+  function botTyping() {
+    const body = document.getElementById("chatBody");
+    body.innerHTML += `<div id="typing" class="typing-indicator">Bot is aan het typen...</div>`;
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function stopTyping() {
+    const typing = document.getElementById("typing");
+    if (typing) typing.remove();
+  }
+
+  function generateBotResponse(userText) {
+    const text = userText.toLowerCase();
+
+    if (text.includes("hi") || text.includes("hello") || text.includes("hallo")) {
+      return "Hallo! Hoe gaat het met u vandaag?";
+    }
+
+    if (text.includes("help") || text.includes("assist") || text.includes("help me")) {
+      return "Natuurlijk! Vertel me alstublieft waarmee ik kan helpen.";
+    }
+
+    if (text.includes("name")) {
+      return "Mijn naam is LumenBot, uw virtuele assistent!";
+    }
+
+    if (text.includes("how are you")) {
+      return "Ik functioneer uitstekend! Bedankt voor het vragen.";
+    }
+
+    if (text.includes("price") || text.includes("cost")) {
+      return "Prijzen variëren per project. Meestal stellen wij een vaste scope + roadmap op voor transparantie.";
+    }
+
+    return "Dank u! Kunt u dat iets verder toelichten?";
+  }
+
+  function sendMessage() {
+    const input = document.getElementById("chatInput");
+    const body = document.getElementById("chatBody");
+    const userText = input.value.trim();
+
+    if (userText === "") return;
+
+    body.innerHTML += `<div class="user-message">U: ${userText}</div>`;
+    body.scrollTop = body.scrollHeight;
+    input.value = "";
+
+    botTyping();
+    
+    setTimeout(() => {
+      stopTyping();
+      const reply = generateBotResponse(userText);
+      body.innerHTML += `<div class="bot-message">Bot: ${reply}</div>`;
+      body.scrollTop = body.scrollHeight;
+    }, 900);
+  }
+</script>
+
+
 </body>
 </html>
