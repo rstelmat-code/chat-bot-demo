@@ -41,7 +41,7 @@
       color: #4b5563;
     }
 
-    /* Chatbot Bubble */
+    /* Chatbot bubble */
     .chatbot-bubble {
       position: fixed;
       bottom: 24px;
@@ -65,7 +65,7 @@
       transform: scale(1.07);
     }
 
-    /* Chatbot Window */
+    /* Chatbot window */
     .chatbot-window {
       position: fixed;
       bottom: 100px;
@@ -131,7 +131,9 @@
   <div class="page">
     <div class="card">
       <h1>Chatbot Demo</h1>
-      <p class="subtitle">This is a demo preview of a custom chatbot widget integration for client proposals.</p>
+      <p class="subtitle">
+        This is a demo preview of a custom chatbot widget integration for client proposals.
+      </p>
     </div>
   </div>
 
@@ -139,92 +141,48 @@
   <div class="chatbot-bubble" onclick="toggleChat()">💬</div>
 
   <!-- Chatbot window -->
-  <div class="chatbot-window">
+  <div id="chatWindow" class="chatbot-window">
     <div class="chat-header">Chatbot Demo</div>
-    <div class="chat-body">
-      <div class="chat-message">Bot: Hallo en welkom! Hoe kan ik u helpen?</div>
+    <div id="chatBody" class="chat-body">
+      <div class="chat-message">
+        Bot: Hallo en welkom! Hoe kan ik u helpen?
+      </div>
     </div>
     <div class="chat-footer">
       <input id="chatInput" type="text" placeholder="Type a message..." />
       <button onclick="sendMessage()">Send</button>
     </div>
   </div>
-<script>
-  function toggleChat() {
-    const chatWindow = document.getElementById("chatWindow");
-    const body = document.getElementById("chatBody");
 
-    chatWindow.style.display =
-      chatWindow.style.display === "flex" ? "none" : "flex";
-
-    if (body.innerHTML.trim() === "") {
-      botTyping();
-      setTimeout(() => {
-        body.innerHTML += `<div class="bot-message">Bot: Hallo en welkom! Hoe kan ik u helpen?</div>`;
-        body.scrollTop = body.scrollHeight;
-      }, 800);
-    }
-  }
-
-  function botTyping() {
-    const body = document.getElementById("chatBody");
-    body.innerHTML += `<div id="typing" class="typing-indicator">Bot is aan het typen...</div>`;
-    body.scrollTop = body.scrollHeight;
-  }
-
-  function stopTyping() {
-    const typing = document.getElementById("typing");
-    if (typing) typing.remove();
-  }
-
-  function generateBotResponse(userText) {
-    const text = userText.toLowerCase();
-
-    if (text.includes("hi") || text.includes("hello") || text.includes("hallo")) {
-      return "Hallo! Hoe gaat het met u vandaag?";
+  <script>
+    function toggleChat() {
+      const win = document.getElementById('chatWindow');
+      win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    if (text.includes("help") || text.includes("assist") || text.includes("help me")) {
-      return "Natuurlijk! Vertel me alstublieft waarmee ik kan helpen.";
-    }
+    function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const body = document.getElementById('chatBody');
+      const text = input.value.trim();
+      if (!text) return;
 
-    if (text.includes("name")) {
-      return "Mijn naam is LumenBot, uw virtuele assistent!";
-    }
-
-    if (text.includes("how are you")) {
-      return "Ik functioneer uitstekend! Bedankt voor het vragen.";
-    }
-
-    if (text.includes("price") || text.includes("cost")) {
-      return "Prijzen variëren per project. Meestal stellen wij een vaste scope + roadmap op voor transparantie.";
-    }
-
-    return "Dank u! Kunt u dat iets verder toelichten?";
-  }
-
-  function sendMessage() {
-    const input = document.getElementById("chatInput");
-    const body = document.getElementById("chatBody");
-    const userText = input.value.trim();
-
-    if (userText === "") return;
-
-    body.innerHTML += `<div class="user-message">U: ${userText}</div>`;
-    body.scrollTop = body.scrollHeight;
-    input.value = "";
-
-    botTyping();
-    
-    setTimeout(() => {
-      stopTyping();
-      const reply = generateBotResponse(userText);
-      body.innerHTML += `<div class="bot-message">Bot: ${reply}</div>`;
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-message';
+      userMsg.textContent = 'You: ' + text;
+      body.appendChild(userMsg);
       body.scrollTop = body.scrollHeight;
-    }, 900);
-  }
-</script>
 
+      input.value = '';
 
+      // Simple fake reply
+      setTimeout(() => {
+        const botMsg = document.createElement('div');
+        botMsg.className = 'chat-message';
+        botMsg.textContent = 'Bot: Thank you for your message! This is a demo response.';
+        body.appendChild(botMsg);
+        body.scrollTop = body.scrollHeight;
+      }, 600);
+    }
+  </script>
 </body>
 </html>
